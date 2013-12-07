@@ -1,16 +1,18 @@
 package test.jpa;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
  * Entity for Department.
  * @author aleskurlovich
- *
  */
 @Entity
 public class Department {
@@ -19,6 +21,7 @@ public class Department {
 	 * Id.
 	 */
 	@Id
+	@GeneratedValue
 	private Long id;
 	
 	/**
@@ -30,8 +33,8 @@ public class Department {
 	/**
 	 * Set of employees.
 	 */
-	@OneToMany(mappedBy = "departments")
-	private Set<Employee> employee;
+	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+	private Set<Employee> employees;
 
 	/**
 	 * Getter for id.
@@ -39,14 +42,6 @@ public class Department {
 	 */
 	public Long getId() {
 		return id;
-	}
-
-	/**
-	 * Setter for id.
-	 * @param id id
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/**
@@ -69,16 +64,29 @@ public class Department {
 	 * Getter for set of employees.
 	 * @return set of employees
 	 */
-	public Set<Employee> getEmployee() {
-		return employee;
+	public Set<Employee> getEmployees() {
+		return employees;
 	}
-
+	
 	/**
-	 * Setter for set of employees.
-	 * @param employee set of employees
+	 * Adds employee.
+	 * @param employee employee
 	 */
-	public void setEmployee(Set<Employee> employee) {
-		this.employee = employee;
+	public void addEmployee(Employee employee) {
+		if (getEmployees() == null) {
+			employees = new HashSet<Employee>();
+		}
+		employees.add(employee);
+	}
+	
+	/**
+	 * Removes employee.
+	 * @param employee employee
+	 */
+	public void removeEmployee(Employee employee) {
+		if (getEmployees() != null) {
+			employees.remove(employee);
+		}
 	}
 
 	@Override
@@ -86,7 +94,7 @@ public class Department {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((employee == null) ? 0 : employee.hashCode());
+				+ ((getEmployees() == null) ? 0 : getEmployees().hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -101,10 +109,10 @@ public class Department {
 		if (getClass() != obj.getClass())
 			return false;
 		Department other = (Department) obj;
-		if (employee == null) {
-			if (other.employee != null)
+		if (getEmployees() == null) {
+			if (other.getEmployees() != null)
 				return false;
-		} else if (!employee.equals(other.employee))
+		} else if (!getEmployees().equals(other.getEmployees()))
 			return false;
 		if (id == null) {
 			if (other.id != null)

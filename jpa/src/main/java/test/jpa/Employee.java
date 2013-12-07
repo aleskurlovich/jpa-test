@@ -2,13 +2,13 @@ package test.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 /**
  * Entity of Employee.
  * @author aleskurlovich
- *
  */
 @Entity
 public class Employee {
@@ -17,6 +17,7 @@ public class Employee {
 	 * Id.
 	 */
 	@Id
+	@GeneratedValue
 	private Long id;
 	
 	/**
@@ -43,14 +44,6 @@ public class Employee {
 	 */
 	public Long getId() {
 		return id;
-	}
-
-	/**
-	 * Setter for id.
-	 * @param id id
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/**
@@ -106,7 +99,7 @@ public class Employee {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((department == null) ? 0 : department.hashCode());
+				+ ((getDepartment() == null) ? 0 : getDepartment().hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
