@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,6 @@ import test.jpa.Employee;
 /**
  * Test for {@link Department} searching.
  * @author aleskurlovich
- *
  */
 @RunWith(Parameterized.class)
 public class DepartmentSearchTest {
@@ -59,15 +59,17 @@ public class DepartmentSearchTest {
 	@Before
 	public void prepareDatabase() {
 		em.getTransaction().begin();
+		Department d = new Department();
+		d.setName("Department1");
 		Employee e1 = new Employee();
 		e1.setName("Name1");
 		e1.setSurname("Surname1");
+		e1.setDepartment(d);
+		d.addEmployee(e1);
 		Employee e2 = new Employee();
 		e2.setName("Name2");
 		e2.setSurname("Surname2");
-		Department d = new Department();
-		d.setName("Department1");
-		d.addEmployee(e1);
+		e2.setDepartment(d);
 		d.addEmployee(e2);
 		em.persist(d);
 		em.getTransaction().commit();
@@ -97,6 +99,27 @@ public class DepartmentSearchTest {
 	 */
 	@Test
 	public void duplDepartSearch() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+		CriteriaQuery<Long> eQuery = cb.createQuery(Long.class);
+		Root<Employee> eFrom = eQuery.from(Employee.class);
+		eQuery.where(cb.equal(eFrom.get("department")
+								  	.get("name"),
+							  "Department1"));
+		eQuery.select(cb.count(eFrom));
+		
+		CriteriaQuery<Long> dQuery = cb.createQuery(Long.class);
+		Root<Department> dFrom = dQuery.from(Department.class);
+		dQuery.where(dFrom.get("employees")
+						  .get("name")
+						  .in("Name1", 
+							  "Name2"));
+		dQuery.select(cb.count(dFrom));
+		
+		Assert.assertEquals(em.createQuery(eQuery)
+							  .getSingleResult(), 
+							em.createQuery(dQuery)
+							  .getSingleResult());
 	}
 
 }

@@ -99,7 +99,7 @@ public class Employee {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((getDepartment() == null) ? 0 : getDepartment().hashCode());
+				+ ((getDepartment() == null) ? 0 : getDepartment().getName().hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());

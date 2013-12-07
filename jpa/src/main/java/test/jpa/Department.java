@@ -27,7 +27,7 @@ public class Department {
 	/**
 	 * Name.
 	 */
-	@Column
+	@Column(unique = true, nullable = false)
 	private String name;
 	
 	/**
